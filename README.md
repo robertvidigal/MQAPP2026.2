@@ -1,5 +1,6 @@
 # Métodos Quantitativos Aplicados às Políticas Públicas
 Universidade de Brasília, 2026.2
+
 Professor Robert Vidigal (robert.vidigal@unb.br)
 
 Teams: TBD
