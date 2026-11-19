@@ -18,58 +18,76 @@
 #    Esc cancela o comando incompleto. R diferencia maiúsculas de minúsculas.
 #
 # 0. Começando devagar: o R como calculadora ----
-2 + 2
-10 - 3
-4 * 5
-20 / 4
-2^3 # 2*2*2
-sqrt(25)
+2 + 2 # adição
+10 - 3 # subtração
+4 * 5 # multiplicação
+20 / 4 # divisão
+2^3 # 2*2*2 potenciação
+sqrt(25) # raíz-quadrada
 (2 + 3) * 4  # parênteses definem a ordem
 2 + 3 * 4
 
 # Use ponto decimal: 2.5. Vírgulas separam argumentos, como em c(2, 5).
 2.5 * 5 # 2,5 * 5
+9000000
+0.00001
 
 # 0.1 Objetos: guardar um resultado para usar depois ----
 idade <- 20
 idade
+print(idade)
+?print
+
 idade + 1
 
 # O cálculo acima não muda o objeto. Para atualizá-lo, atribua novamente:
-idade <- idade + 1
-idade
+idade2 <- idade + 1
+idade2
 
 nome <- "Ana"   # texto entre aspas
+nome
+
 participou <- TRUE  # valor lógico: TRUE ou FALSE
 
+# Função de classe 
 class(idade)
 class(nome)
 class(participou)
 
 # Use nomes como media_renda, sem espaços. <- guarda; == compara.
-idade == 21
+idade == 21 # é igual?
 idade > 18
 idade < 15
-idade != 21
+idade != 21 # != é diferente?
 
 # 0.2 Vetores: várias observações em um objeto ----
 notas_exemplo <- c(40, 50, 60, 70, 80)
 notas_exemplo
 
 length(notas_exemplo)
-
 sum(notas_exemplo)
-mean(notas_exemplo)
 
 sum(notas_exemplo) / length(notas_exemplo)
+
+mean(notas_exemplo)
 
 min(notas_exemplo)
 max(notas_exemplo)
 
+nomes_exemplo <- c("Pedro", "João", "Antonio")
+nomes_exemplo
+
+sequencia <- c(1:9, 12:15, 20:34)
+sequencia
+
+vetor_exemplo <- c("Ana", 13, TRUE)
+vetor_exemplo
+
 # Uma função recebe argumentos entre parênteses e devolve um resultado.
 # digits = 2 é um argumento nomeado. Para abrir a ajuda: ?mean (opcional).
 mean(c(5, 7, 8))
-round(mean(c(5, 7, 8)), digits = 2)
+
+round(mean(c(5, 7, 8)), digits = 1)
 ?mean
 ?round
 
@@ -80,25 +98,28 @@ notas_exemplo[c(1, 3)]
 
 notas_exemplo[2:4]     # 2:4 puxa elementos 2, 3, 4
 
-notas_exemplo >= 60    # uma comparação para cada observação
-!(notas_exemplo >= 60)                    # ! é igual NÃO: inverte a condição
+notas_exemplo >= 50    # uma comparação para cada observação
+!(notas_exemplo >= 50) # ! é igual NÃO: inverte a condição
 
-notas_exemplo[notas_exemplo >= 60]
+notas_exemplo[notas_exemplo >= 50]
 
-sum(notas_exemplo >= 60)   # TRUE vale 1; FALSE vale 0 na soma
-mean(notas_exemplo >= 60)  # proporção que atende ao critério
+sum(notas_exemplo >= 50)   # TRUE vale 1; FALSE vale 0 na soma
+mean(notas_exemplo >= 50)  # proporção que atende ao critério
 
-notas_exemplo >= 50 & notas_exemplo <= 70  # E: ambos verdadeiros
+notas_exemplo[notas_exemplo >= 50 & notas_exemplo <= 70]  # E: ambos verdadeiros
 
-notas_exemplo < 50 | notas_exemplo > 70    # OU: pelo menos um verdadeiro
+notas_exemplo[notas_exemplo < 50 | notas_exemplo > 70] # OU: pelo menos um verdadeiro
 
 # 0.4 Pequena tabela/dataframes: linhas são pessoas, colunas são variáveis ----
 turma <- data.frame(
   nome = c("Antônia", "Bruno", "Simone", "Diego", "Eva"),
   nota = notas_exemplo,
   presencas = c(8, 6, 9, 10, 7)
-)
+  )
+
+print(turma)
 turma
+View(turma)
 
 names(turma)
 nrow(turma)
@@ -106,14 +127,17 @@ ncol(turma)
 
 # $ seleciona uma coluna pelo nome
 turma$nota                
-turma$nota
+turma$nome
 
-turma[1, ]                # [linhas, colunas]; vazio significa todas
-turma[, c("nome", "nota")]
+turma[c(1,3), ] # [linhas, colunas]; vazio significa todas
+turma[      ,"nome"]
+turma[, c("nome", "presencas")]
 turma[turma$nota >= 50, c("nome", "nota")]
 
 # Criando uma coluna lógica
 turma$aprovado <- turma$nota >= 50   
+turma$extra <- NA
+turma$extra <- 1
 turma
 
 # A notação y ~ x será usada mais adiante: 'y em função de x'.
@@ -124,14 +148,20 @@ is.na(rendas_exemplo)
 sum(is.na(rendas_exemplo))
 mean(rendas_exemplo)                # retorna NA
 mean(rendas_exemplo, na.rm = TRUE)  # usa apenas as rendas conhecidas
-plot(turma$presencas, turma$nota, pch = 19,
-     xlab = "Presenças", ylab = "Nota", main = "Primeiro gráfico: turma fictícia")
+
+plot(x = turma$presencas, y = turma$nota, 
+     pch = 19, cex = 4, col = "purple",
+     xlab = "Presenças em sala", 
+     ylab = "Nota final", 
+     main = "Primeiro gráfico de exemplo: turma fictícia")
+?plot
 
 ### Exercício: crie um vetor com 4 notas de 0 a 100. 
 ### Calcule a média e selecione as notas >= 50. 
 ### Use outro nome para preservar as notas originais.
 
-
+notasteste <- c(30, 50, 100, 90, 80)
+mean(notasteste[notasteste >= 50])
 
 # 0.6 Amostragem, funções e repetição: ler antes das simulações ----
 # set.seed() não faz todo sorteio ser igual: reinicia uma sequência reproduzível.
@@ -140,14 +170,14 @@ sample(1:10, size = 4, replace = FALSE)  # sorteio sem reposição
 sample(1:10, size = 4, replace = TRUE)   # com reposição: pode repetir valores
 
 # FUNÇÃO: reúne comandos e permite reutilizá-los.
-dobrar <- function(x) {
-  2 * x
+dobrar <- function(meu_numero) {
+  2 * meu_numero
 }
 dobrar(3)
 dobrar(c(2, 4, 6))
 
 # for repete comandos, mudando i. É uma leitura guiada pelo docente.
-for (i in 1:5) {
+for (i in 5:10) {
   print(i * 10)
 }
 
@@ -176,22 +206,29 @@ populacao <- data.frame(
                        levels = c("Baixa", "Media", "Alta"))
 )
 
-head(populacao)
+head(populacao); tail(populacao) # ; executa mais de uma função em uma linha só
+
 View(populacao)  # opcional: abre uma aba de dados no RStudio
 
 populacao$pontuacao <- 30 + 1.8 * populacao$escolaridade +
   5 * (populacao$grupo == "Capacitacao") + rnorm(N, mean = 0, sd = 8)
+
+min(populacao$pontuacao)
+max(populacao$pontuacao)
+mean(populacao$pontuacao)
 
 head(populacao$pontuacao)
 
 # Uma amostra aleatória simples, sem reposição, é nossa base de análise.
 n <- 180
 dados <- populacao[sample.int(N, n, replace = FALSE), ]
+dados
 rownames(dados) <- NULL
 
 head(dados)
-str(dados)
-dim(dados)
+str(dados) # strucutre
+dim(dados) # dimension
+ncol(dados); nrow(dados)
 
 # Inserimos quatro rendas ausentes para aprender a reconhecer NAs.
 dados$renda[sample.int(n, 4)] <- NA_real_
@@ -200,8 +237,10 @@ dados$renda[sample.int(n, 4)] <- NA_real_
 head(is.na(dados$renda))
 table(is.na(dados$renda))
 
+table(dados$satisfacao)
+
 # Unidade de análise: indivíduos. 
-# População: pessoas fictícias; amostra: 180 pessoas.
+# População: pessoas fictícias 10000; amostra: 180 pessoas.
 # Grupo: nominal; satisfacao: ordinal; escolaridade: anos completos (discreta);
 # Renda e pontuação: quantitativas contínuas (renda registrada em centavos).
 # id é identificador: calcular sua média não tem interpretação substantiva.
@@ -213,6 +252,7 @@ table(is.na(dados$renda))
 ### 1.1 Frequências absolutas, relativas e acumuladas
 frequencia_grupo <- table(dados$grupo)
 frequencia_grupo
+
 round(100 * prop.table(frequencia_grupo), 1)
 frequencia_satisfacao <- table(dados$satisfacao)
 frequencia_satisfacao
@@ -383,12 +423,16 @@ dados[dados$z_pontuacao > 2, c("id", "pontuacao", "z_pontuacao")]
 # Não use automaticamente pnorm(z) como percentil empírico de qualquer variável.
 # Também podemos voltar à escala original:
 mean(dados$pontuacao) + 2 * sd(dados$pontuacao)
+
 # Exercício curto U2: qual proporção tem z_pontuacao < -1?
 
 # # -----------------------------------------------------------------------
 # UNIDADE 3. Hipóteses, intervalos de confiança e testes t ----
 # # -----------------------------------------------------------------------
-### 3.1 Uma amostra: H0: média populacional da pontuação = 60; H1: diferente de 60.
+### 3.1 Uma amostra: 
+# H0: média populacional da pontuação = 60; 
+# H1: diferente de 60.
+
 # Referência de 60 pontos escolhida apenas para fins didáticos.
 # Fixamos alfa antes de observar o teste; adotamos teste bilateral.
 alfa <- 0.05
@@ -396,22 +440,23 @@ teste_uma <- t.test(dados$pontuacao, mu = 60, conf.level = 1 - alfa)
 teste_uma
 
 # Construção manual: estimativa +/- t crítico * erro padrão estimado.
-n_valido <- sum(!is.na(dados$pontuacao))
-media_amostral <- mean(dados$pontuacao)
-erro_padrao <- sd(dados$pontuacao) / sqrt(n_valido)
-t_observado <- (media_amostral - 60) / erro_padrao
-margem <- qt(1 - alfa / 2, df = n_valido - 1) * erro_padrao
-ic_manual <- media_amostral + c(-1, 1) * margem
-c(media = media_amostral, erro_padrao = erro_padrao, t = t_observado)
-ic_manual
-2 * pt(-abs(t_observado), df = n_valido - 1)
+#n_valido <- sum(!is.na(dados$pontuacao))
+#media_amostral <- mean(dados$pontuacao)
+#erro_padrao <- sd(dados$pontuacao) / sqrt(n_valido)
+#t_observado <- (media_amostral - 60) / erro_padrao
+#margem <- qt(1 - alfa / 2, df = n_valido - 1) * erro_padrao
+#ic_manual <- media_amostral + c(-1, 1) * margem
+#c(media = media_amostral, erro_padrao = erro_padrao, t = t_observado)
+#ic_manual
+#2 * pt(-abs(t_observado), df = n_valido - 1)
 
 ### 3.2 Duas amostras independentes: teste t de Welch
 # H0: média da capacitação - média do controle = 0.
-# H1: essa diferença é diferente de zero. Welch permite variâncias diferentes.
+# H1: essa diferença é diferente de zero. 
 capacitacao <- dados$pontuacao[dados$grupo == "Capacitacao"]
 controle <- dados$pontuacao[dados$grupo == "Controle"]
-teste_duas <- t.test(capacitacao, controle, var.equal = FALSE,
+teste_duas <- t.test(capacitacao, controle, 
+                     var.equal = FALSE,
                      conf.level = 1 - alfa)
 teste_duas
 
@@ -431,7 +476,6 @@ if (teste_duas$p.value <= alfa) {
 # Um IC de 95% vem de um procedimento que cobre o parâmetro em 95% das
 # repetições sob os pressupostos. Não contém 95% dos resultados individuais.
 
-# Relate diferença, IC e contexto, além do p-valor. 
 # Significância não mede relevância.
 
 # Erro tipo I: rejeitar H0 verdadeira (falso positivo). 
@@ -441,6 +485,7 @@ if (teste_duas$p.value <= alfa) {
 
 # 3.3 Teste agrupado de Student: reproduzindo as contas dos slides ----
 # Pressuposto adicional: mesmas variâncias populacionais nos dois grupos.
+
 # Tamanhos amostrais diferentes são permitidos. A base tem pontuações completas.
 n1 <- length(capacitacao)
 n2 <- length(controle)
@@ -457,34 +502,37 @@ ic_agrupado <- diferenca + c(-1, 1) * t_critico * ep_diferenca
 c(variancia_agrupada = variancia_agrupada, EP = ep_diferenca,
   t = t_agrupado, gl = gl_agrupado, p = p_agrupado)
 ic_agrupado
+
 # Conferência com a função pronta:
-teste_student <- t.test(capacitacao, controle, var.equal = TRUE)
+teste_student <- t.test(capacitacao, controle, var.equal = F)
 teste_student
-# Welch estima o EP com as variâncias separadas e ajusta os graus de liberdade.
-# Student agrupa as variâncias. Não escolha o método pelo menor p-valor.
-# Variâncias amostrais parecidas não demonstram igualdade populacional.
-# Independência e desenho da coleta não podem ser certificados por um comando.
 
 # 3.4 A pergunta define a cauda: unilateral e bilateral ----
 # Exemplo direcional, definido antes da análise: a oferta aumenta a pontuação?
-# H0: média_cap - média_cont <= 0; H1: média_cap - média_cont > 0.
+# H0: média_cap - média_cont <= 0; 
+# H1: média_cap - média_cont > 0.
+
 # Cálculo da distribuição de referência na fronteira: diferença = 0.
 teste_direita <- t.test(capacitacao, controle, var.equal = TRUE,
                         alternative = "greater")
+teste_direita
+
 c(p_bilateral = teste_student$p.value, p_direita = teste_direita$p.value)
+
 # Um teste unilateral na direção oposta pode produzir p próximo de 1.
-# Não troque a cauda depois de olhar os dados para obter significância.
+
 # O IC de t.test(..., alternative = "greater") é unilateral; não o confunda
-# com o IC bilateral de 95%. Compare aqui os p-valores, preservando os alvos.
+# com o IC bilateral de 95%. 
 
 # 3.5 A hipótese nula pode estabelecer outra diferença ----
-# Agora H0: média_cap - média_cont = 1 ponto; H1: diferente de 1.
+# Agora H0: média_cap - média_cont = 1 ponto; 
+# H1: diferente de 1.
 # É um EXEMPLO separado de hipótese bilateral, não uma nova busca por p pequeno.
+
+# Em dois vetores, mu indica a diferença de referência, não a média de um grupo.
 teste_delta_1 <- t.test(capacitacao, controle, mu = 1, var.equal = TRUE)
 teste_delta_1
-(diferenca - 1) / ep_diferenca
-# Em dois vetores, mu indica a diferença de referência, não a média de um grupo.
-# O IC mostrado continua sendo para a diferença entre as médias.
+# O IC aqui continua sendo para a diferença entre as médias.
 
 # 3.6 Desenhar os ICs de 95% e 99% com os mesmos dados ----
 ic95 <- as.numeric(teste_student$conf.int)
@@ -500,37 +548,43 @@ axis(2, at = c(1, 2), labels = c("95%", "99%"), las = 1)
 segments(ic95[1], 1, ic95[2], 1, col = "steelblue", lwd = 3)
 segments(ic99[1], 2, ic99[2], 2, col = "darkgreen", lwd = 3)
 abline(v = 0, lty = 2)
+
 # Mais confiança exige valor crítico maior e IC mais amplo, mantendo os dados.
 # Aumentar n tende a estreitar o IC; aumentar a dispersão tende a ampliá-lo.
+
 # Nos ICs bilaterais correspondentes ao mesmo teste, excluir zero equivale a
 # rejeitar a hipótese de diferença zero ao nível alfa correspondente.
-# Esse vínculo não permite misturar o IC de Student com o p-valor de Welch.
 
 # 3.7 Poder estatístico: planejamento para um efeito de interesse ----
-# Tipo I: rejeitar H0 verdadeira. Tipo II: não rejeitar H0 falsa.
+# Tipo I: rejeitar H0 verdadeira. 
+# Tipo II: não rejeitar H0 falsa.
+
 # Poder = 1 - beta, para um efeito ESPECÍFICO, desenho, alfa e tamanho amostral.
-# Exemplo planejado: detectar 5 pontos com DP de 12, grupos independentes,
-# equilibrados, teste bilateral com alfa = 0,05. São valores hipotéticos prévios.
+
+# Exemplo: detectar 5 pontos com D.P. de 12 em grupos independentes,
+# teste bilateral com alfa = 0.05. São valores hipotéticos prévios.
+
 # power.t.test() para type = "two.sample" usa n POR GRUPO e variância comum.
 poder_30 <- power.t.test(n = 30, delta = 5, sd = 12, sig.level = 0.05,
-                         type = "two.sample", alternative = "two.sided",
-                         strict = TRUE)
+                         type = "two.sample", alternative = "two.sided")
 poder_100 <- power.t.test(n = 100, delta = 5, sd = 12, sig.level = 0.05,
-                          type = "two.sample", alternative = "two.sided",
-                          strict = TRUE)
+                          type = "two.sample", alternative = "two.sided")
+
 c(n30 = poder_30$power, n100 = poder_100$power)
+
 # strict = TRUE inclui a rejeição nas duas caudas no cálculo do poder bilateral.
 planejamento <- power.t.test(delta = 5, sd = 12, sig.level = 0.05,
                              power = 0.80, type = "two.sample",
                              alternative = "two.sided", strict = TRUE)
 planejamento
 ceiling(planejamento$n)      # arredondar para cima: pessoas POR GRUPO
-2 * ceiling(planejamento$n)  # total em dois grupos equilibrados
+2 * ceiling(planejamento$n)  # total em dois grupos
+
 # Mantendo os demais elementos, mais n e maior efeito aumentam o poder;
 # menor alfa torna a rejeição mais difícil e reduz o poder.
-# Não usamos o efeito observado para produzir 'poder pós-hoc' do mesmo teste.
+
 # A função é ferramenta de planejamento; não acrescenta evidência ao p observado.
-# Limite: o cálculo t usual ignora a correção para população finita; aqui n/N=1,8%.
+
 # Exercício curto U3: reproduza o planejamento com poder de 90%.
 
 # # -----------------------------------------------------------------------
@@ -550,7 +604,7 @@ r
 
 cor.test(dados$escolaridade, dados$pontuacao, method = "pearson")
 
-### 4.2 Reta de mínimos quadrados: pontuação estimada = b0 + b1 * escolaridade
+### 4.2 Reta de MQO: pontuação estimada (y) = b0 + b1 * escolaridade
 # Antes da função pronta: somas de quadrados e produtos dos slides.
 x <- dados$escolaridade
 y <- dados$pontuacao
@@ -563,10 +617,12 @@ r_manual <- SP / sqrt(SQx * SQy)
 b1_manual <- SP / SQx
 b0_manual <- mean(y) - b1_manual * mean(x)
 c(r_manual = r_manual, r_R = r, b0 = b0_manual, b1 = b1_manual)
+
 # A reta com intercepto passa pelo ponto das médias de X e Y.
 b0_manual + b1_manual * mean(x)
 mean(y)
 
+# Função lm()
 modelo <- lm(pontuacao ~ escolaridade, data = dados)
 summary(modelo)
 coef(modelo)
@@ -575,27 +631,29 @@ abline(modelo, col = "darkred", lwd = 2)
 
 # b1: mudança média estimada na pontuação associada a mais um ano de estudo.
 # b0: pontuação estimada para zero anos. Zero está fora do intervalo observado:
-# o intercepto não ganha interpretação substantiva automática.
 range(dados$escolaridade)
+# o intercepto não ganha interpretação substantiva automática.
+
 # Escolaridade não foi aleatorizada. Seu coeficiente não demonstra efeito causal.
-# O modelo simples omite o grupo; não representa a fórmula completa da simulação.
 
 ### 4.3 R quadrado e sua ligação com a correlação
 r_quadrado <- summary(modelo)$r.squared
 c(R2 = r_quadrado, correlacao_ao_quadrado = r^2)
 # R2 é a proporção da variação amostral de Y explicada pelo ajuste linear.
-# A igualdade R2 = r^2 vale aqui: regressão simples com intercepto e mesmas linhas.
 
 ### 4.4 Previsão da média e previsão de uma pessoa
 novos <- data.frame(escolaridade = c(8, 12, 16))
 predict(modelo, newdata = novos, interval = "confidence")
 predict(modelo, newdata = novos, interval = "prediction")
+
 # O primeiro intervalo é para a média condicional; o segundo, para uma nova pessoa.
 # O segundo inclui variabilidade individual e tende a ser mais amplo.
 
 ### 4.5 Resíduos e limites do modelo
 plot(fitted(modelo), residuals(modelo), pch = 19, col = "steelblue",
-     xlab = "Valores ajustados", ylab = "Resíduos", main = "Resíduos e ajuste")
+     xlab = "Valores ajustados", 
+     ylab = "Resíduos", 
+     main = "Resíduos e ajuste")
 abline(h = 0, lty = 2)
 qqnorm(residuals(modelo), main = "Gráfico quantil normal dos resíduos")
 qqline(residuals(modelo), col = "darkred")
@@ -605,7 +663,7 @@ qqline(residuals(modelo), col = "darkred")
 # normalidade dos erros fundamenta os testes e intervalos exatos em amostras pequenas.
 
 # 4.6 Regressão múltipla e categoria de referência ----
-# A fórmula que gerou a pontuação usou escolaridade E grupo.
+# Vamos usar a pontuação, escolaridade E grupo.
 # Mantemos Controle como referência explicitamente.
 dados$grupo <- relevel(dados$grupo, ref = "Controle")
 modelo_multiplo <- lm(pontuacao ~ escolaridade + grupo, data = dados)
@@ -613,15 +671,15 @@ summary(modelo_multiplo)
 confint(modelo_multiplo)
 cbind(simples = c(coef(modelo), grupoCapacitacao = NA_real_),
       multiplo = coef(modelo_multiplo))
+
 # No múltiplo: escolaridade é a associação com mais um ano, mantendo o grupo fixo.
-# grupoCapacitacao é a diferença prevista em relação a Controle, com a mesma
-# escolaridade. Não é preciso criar manualmente uma variável 0/1: factor faz isso.
-# O efeito verdadeiro na fórmula geradora é 5; a estimativa amostral não tem
-# obrigação de coincidir exatamente com ele.
-# A escolaridade não foi aleatorizada. Ajustar uma regressão não prova causalidade.
-# A oferta foi aleatorizada e não há perdas no desfecho: o desenho simulado
-# sustenta a análise causal da oferta sob suas condições, não de qualquer preditor.
-# No múltiplo, o R2 total não é o quadrado da correlação simples de um preditor.
+# grupoCapacitacao é a diferença prevista em relação a grupoControle, com a mesma
+# escolaridade. 
+
+# Não é preciso criar manualmente uma variável 0/1: factor faz isso.
+
+# A oferta foi aleatorizada: o desenho simulado sustenta a análise causal do curso.
+# No modelo múltiplo, o R2 total não é o quadrado da correlação simples de um preditor.
 
 # Dois perfis com a mesma escolaridade e grupos diferentes:
 perfis <- data.frame(
@@ -633,19 +691,21 @@ predict(modelo_multiplo, newdata = perfis, interval = "confidence")
 # Comparação descritiva dos ajustes:
 c(R2_simples = summary(modelo)$r.squared,
   R2_multiplo = summary(modelo_multiplo)$r.squared)
-# Acrescentar preditores não reduz R2 nos mesmos casos.
+# Acrescentar preditores não reduz R2.
 
 # 4.7 Correlação geral, dentro dos grupos e parcial ----
 # Primeiro, correlações separadas por grupo:
-cor_controle <- cor(dados$escolaridade[dados$grupo == "Controle"], controle)
-cor_capacitacao <- cor(dados$escolaridade[dados$grupo == "Capacitacao"], capacitacao)
+cor_controle <- cor(dados$escolaridade[dados$grupo == "Controle"], controle); cor_controle
+cor_capacitacao <- cor(dados$escolaridade[dados$grupo == "Capacitacao"], capacitacao); cor_capacitacao
 c(geral = r, controle = cor_controle, capacitacao = cor_capacitacao)
+
 plot(pontuacao ~ escolaridade, data = dados,
-     col = c("gray40", "darkgreen")[as.integer(dados$grupo)], pch = 19,
+     col = c("blue", "green")[as.integer(dados$grupo)], pch = 19,
      xlab = "Escolaridade em anos", ylab = "Pontuação",
      main = "Associação dentro dos grupos")
 legend("topleft", legend = levels(dados$grupo),
-       col = c("gray40", "darkgreen"), pch = 19, bty = "n")
+       col = c("blue", "green"), pch = 19, bty = "n")
+
 # Correlação parcial: ajustamos X e Y pelo grupo e correlacionamos os resíduos.
 ajuste_x_grupo <- lm(escolaridade ~ grupo, data = dados)
 ajuste_y_grupo <- lm(pontuacao ~ grupo, data = dados)
@@ -653,15 +713,14 @@ r_parcial <- cor(residuals(ajuste_x_grupo), residuals(ajuste_y_grupo))
 c(correlacao_simples = r, parcial_por_grupo = r_parcial)
 
 # Um ajuste remove diferenças lineares associadas ao grupo; não elimina todos
-# os confundidores possíveis. Não use cor.test() ingênuo nos resíduos para
-# inferência parcial: os graus de liberdade devem considerar o ajuste.
-# O grupo foi sorteado independentemente da escolaridade; não esperamos aqui
-# uma grande mudança por confundimento. Tampouco correlação parcial é a média
-# das correlações calculadas separadamente em cada grupo.
+# as "terceiras" variáveis possíveis. 
+
+# O grupo foi randomizado independentemente da escolaridade; não esperamos aqui
+# uma grande mudança.
+
 
 # BANCO DE EXERCÍCIOS. Todos usam comandos apresentados acima. ----
 # Selecione atividades para prática em duplas ou continuação após a aula.
-# Gabarito em outro arquivo.
 
 # 1. Calcule a proporção em cada grupo e o NÚMERO de rendas não ausentes.
 # 2. Compare média e mediana da renda; relacione com o histograma.
