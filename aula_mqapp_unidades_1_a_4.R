@@ -452,7 +452,7 @@ teste_uma
 
 ### 3.2 Duas amostras independentes: teste t de Welch
 # H0: média da capacitação - média do controle = 0.
-# H1: essa diferença é diferente de zero. 
+# H1: média da capacitação - média do controle != 0.
 capacitacao <- dados$pontuacao[dados$grupo == "Capacitacao"]
 controle <- dados$pontuacao[dados$grupo == "Controle"]
 teste_duas <- t.test(capacitacao, controle, 
@@ -482,6 +482,9 @@ if (teste_duas$p.value <= alfa) {
 # Erro Tipo II: não rejeitar H0 falsa (falso negativo).
 
 # PERGUNTA 3: escreva uma conclusão de duas frases com a diferença e IC.
+
+# Ao nível de 5% de confiança, nós rejeitamos a hipótese nula de diferença
+# de médias. Com IC inferior de 1.56 e superior de 8.8.
 
 # 3.3 Teste agrupado de Student: reproduzindo as contas dos slides ----
 # Pressuposto adicional: mesmas variâncias populacionais nos dois grupos.
@@ -513,7 +516,8 @@ teste_student
 # H1: média_cap - média_cont > 0.
 
 # Cálculo da distribuição de referência na fronteira: diferença = 0.
-teste_direita <- t.test(capacitacao, controle, var.equal = TRUE,
+teste_direita <- t.test(capacitacao, controle, 
+                        var.equal = TRUE,
                         alternative = "greater")
 teste_direita
 
@@ -538,6 +542,7 @@ teste_delta_1
 ic95 <- as.numeric(teste_student$conf.int)
 ic99 <- as.numeric(t.test(capacitacao, controle, var.equal = TRUE,
                          conf.level = 0.99)$conf.int)
+
 rbind(IC95 = ic95, IC99 = ic99)
 c(largura95 = diff(ic95), largura99 = diff(ic99))
 plot(rep(diferenca, 2), c(1, 2), xlim = range(c(ic95, ic99, 0)),
@@ -590,7 +595,7 @@ ceiling(planejamento$n)      # arredondar para cima: pessoas POR GRUPO
 # # -----------------------------------------------------------------------
 # UNIDADE 4. Correlação e regressão simples e múltipla ----
 # # -----------------------------------------------------------------------
-### 4.1 Associação entre duas variáveis quantitativas
+### 4.1 Associação entre duas variáveis quantitativas (y ~ x)
 plot(pontuacao ~ escolaridade, data = dados, pch = 19, col = "darkgreen",
      xlab = "Escolaridade em anos", ylab = "Pontuação",
      main = "Escolaridade e conhecimento nos dados simulados")
@@ -599,7 +604,7 @@ plot(pontuacao ~ escolaridade, data = dados, pch = 19, col = "darkgreen",
 cov(dados$escolaridade, dados$pontuacao)
 
 # Pearson resume associação LINEAR, varia de -1 a 1 e não tem unidade.
-r <- cor(dados$escolaridade, dados$pontuacao, method = "pearson")
+r <- cor(dados$pontuacao, dados$escolaridade, method = "pearson")
 r
 
 cor.test(dados$escolaridade, dados$pontuacao, method = "pearson")
